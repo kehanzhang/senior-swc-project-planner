@@ -7,6 +7,7 @@ export interface UserResponses {
     operatingSystem: 'mac' | 'windows' | null;
     aiModel: 'gpt' | 'claude' | null;
     setupInstructions: boolean | null;
+    firebaseInstructions: boolean | null;
 }
 
 interface UserResponseContextType {
@@ -19,9 +20,10 @@ const UserResponseContext = createContext<UserResponseContextType | undefined>(u
 export function UserResponseProvider({ children }: { children: ReactNode }) {
     const [responses, setResponses] = useState<UserResponses>({
         projectDescription: '',
-        operatingSystem: '',
+        operatingSystem: null,
         aiModel: null,
         setupInstructions: null,
+        firebaseInstructions: null,
     });
 
     const updateResponse = (key: keyof UserResponses, value: string | boolean | null) => {

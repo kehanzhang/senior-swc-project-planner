@@ -1,14 +1,18 @@
 'use client';
 
-import { QuestionnaireStep } from '@/components/QuestionnaireStep';
+import QuestionnaireStep from '@/components/QuestionnaireStep';
+import { useState } from 'react';
 
 export default function ProjectDescription() {
+  const [step, setStep] = useState(0);
+  const [trail, setTrail] = useState<number[]>([]);
+
   return (
     <QuestionnaireStep
-      question="What are you trying to build? Describe the features, use-cases, and flow/pages involved."
-      responseKey="projectDescription"
-      nextStep="/operating-system"
-      buttonLabels={["Generate with GPT-4", "Generate with Claude 3.5 Sonnet"]}
+      index={step}
+      setIndex={setStep}
+      trail={trail}
+      setTrail={setTrail}
     />
   );
 }
