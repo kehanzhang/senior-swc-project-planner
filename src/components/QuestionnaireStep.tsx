@@ -49,6 +49,13 @@ const stepData: StepData[] = [
         buttonLabels: ["Yes", "No"],
         imagePaths: ["/firebase.png"]
     },
+    {
+        question: "Do you want instructions for setting up Git?",
+        responseKey: "gitInstructions",
+        contentType: "singleImage",
+        buttonLabels: ["Yes", "No"],
+        imagePaths: ["/git.png"]
+    },
 ]
 
 export default function QuestionnaireStep({
@@ -93,7 +100,7 @@ export default function QuestionnaireStep({
                     jumpIndex = 3
                 }
                 break;
-            case -1:
+            case 4:
                 console.log(`Pushing to response page`);
                 router.push('/response');
                 break;
@@ -106,7 +113,10 @@ export default function QuestionnaireStep({
 
     const handleNext = (value: string) => {
         console.log(`Updating response for ${responseKey} with value: ${value}`);
-        updateResponse(responseKey, value);
+        if (index > 0) {
+            updateResponse(responseKey, value);
+        }
+
         manageIndex(value);
     };
 

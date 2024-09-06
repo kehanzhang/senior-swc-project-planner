@@ -8,6 +8,7 @@ export interface UserResponses {
     aiModel: 'gpt' | 'claude' | null;
     setupInstructions: boolean | null;
     firebaseInstructions: boolean | null;
+    gitInstructions: boolean | null;
 }
 
 interface UserResponseContextType {
@@ -24,6 +25,7 @@ export function UserResponseProvider({ children }: { children: ReactNode }) {
         aiModel: null,
         setupInstructions: null,
         firebaseInstructions: null,
+        gitInstructions: null,
     });
 
     const updateResponse = (key: keyof UserResponses, value: string | boolean | null) => {
