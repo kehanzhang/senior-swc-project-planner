@@ -5,9 +5,10 @@ interface InputFieldProps {
     handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     isLoading: boolean;
+    handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
-export default function InputField({ input, handleInputChange, handleSubmit, isLoading }: InputFieldProps) {
+export default function InputField({ input, handleInputChange, handleSubmit, isLoading, handleKeyDown }: InputFieldProps) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
@@ -26,17 +27,18 @@ export default function InputField({ input, handleInputChange, handleSubmit, isL
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-4 border-t">
+        <form onSubmit={handleSubmit} className="px-4">
             <div className="relative">
                 <textarea
                     ref={textareaRef}
                     value={input}
                     onChange={handleTextareaChange}
+                    onKeyDown={handleKeyDown}
                     placeholder="Type your message here..."
                     className="w-full p-3 pr-24 border rounded resize-none overflow-hidden min-h-[46px]"
                     rows={1}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                     <button
                         type="submit"
                         disabled={isLoading}

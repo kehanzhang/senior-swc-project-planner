@@ -26,7 +26,7 @@ export default function ChatInterface() {
         localStorage.setItem('selectedModel', newModel);
     };
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSubmit(e as any);
@@ -35,17 +35,23 @@ export default function ChatInterface() {
 
     return (
         <div className="flex flex-col h-screen">
-            <ModelSelector model={model} onModelChange={handleModelChange} />
-            <MessageList messages={messages} />
-            <InputField
-                input={input}
-                handleInputChange={handleInputChange}
-                handleSubmit={handleSubmit}
-                isLoading={isLoading}
-                handleKeyDown={handleKeyDown}  // Pass the handleKeyDown function
-            />
-            {error && <ErrorDisplay error={error} />}
-            {isLoading && <LoadingIndicator />}
+            <div className="flex-shrink-0">
+                <ModelSelector model={model} onModelChange={handleModelChange} />
+            </div>
+            <div className="flex-grow overflow-auto">
+                <MessageList messages={messages} />
+            </div>
+            <div className="flex-shrink-0 pb-4">
+                <InputField
+                    input={input}
+                    handleInputChange={handleInputChange}
+                    handleSubmit={handleSubmit}
+                    isLoading={isLoading}
+                    handleKeyDown={handleKeyDown}
+                />
+                {error && <ErrorDisplay error={error} />}
+                {isLoading && <LoadingIndicator />}
+            </div>
         </div>
     );
 }
