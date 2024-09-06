@@ -4,6 +4,7 @@ import { openai } from "@ai-sdk/openai";
 import { streamObject } from "ai";
 import { z } from "zod";
 import { createStreamableValue } from "ai/rsc";
+import { Step } from "@/lib/types/project";
 
 export async function generateSteps(idea: string) {
   "use server";
@@ -34,20 +35,22 @@ export async function generateSteps(idea: string) {
       Provide concise, actionable steps focused on coding and technical implementation, assuming the development environment is ready.
     `;
 
+    const StepSchema = z.object({
+      step: z.number(),
+      title: z.string(),
+      description: z.string(),
+      apiRoutes: z.array(z.string()).optional(),
+      features: z.array(z.string()).optional(),
+      components: z.array(z.string()).optional(),
+      considerations: z.array(z.string()).optional(),
+      actionableSteps: z.array(z.string()).optional(),
+    }) satisfies z.ZodType<Step>;
+
     const { partialObjectStream } = await streamObject({
       model: openai("gpt-4"),
       messages: [{ role: "user", content: prompt }],
       output: "array",
-      schema: z.object({
-        step: z.number(),
-        title: z.string(),
-        description: z.string(),
-        apiRoutes: z.array(z.string()).optional(),
-        features: z.array(z.string()).optional(),
-        components: z.array(z.string()).optional(),
-        considerations: z.array(z.string()).optional(),
-        actionableSteps: z.array(z.string()).optional(),
-      }),
+      schema: StepSchema,
     });
 
     for await (const partialObject of partialObjectStream) {

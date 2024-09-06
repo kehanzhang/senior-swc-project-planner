@@ -4,11 +4,12 @@ import { useState } from "react";
 import { generateSteps } from "../actions/generateSteps";
 import { readStreamableValue } from "ai/rsc";
 import { ProjectPlanner } from "@/components/project-planner";
+import { Step } from "@/lib/types/project";
 
 // Allow streaming responses up to 60 seconds
 export const maxDuration = 60;
 
-const TEST_DATA = [
+const TEST_DATA: Step[] = [
   {
     step: 1,
     title: "User Authentication",
@@ -109,7 +110,7 @@ const TEST_DATA = [
 
 export default function TestPage() {
   const [idea, setIdea] = useState("");
-  const [projectData, setProjectData] = useState<any[]>([]);
+  const [projectData, setProjectData] = useState<Step[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
