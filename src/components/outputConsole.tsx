@@ -11,12 +11,14 @@ interface CommandOutput {
 const OutputConsole: React.FC = () => {
     const { responses } = useUserResponse();
     const [isMinimized, setIsMinimized] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [displayedResponses, setDisplayedResponses] = useState(responses);
     const [isUpdating, setIsUpdating] = useState(false);
     const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [commandHistory, setCommandHistory] = useState<CommandOutput[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
     const consoleRef = useRef<HTMLDivElement>(null);
+    const prevGitInstructionsRef = useRef(responses.gitInstructions);
 
     useEffect(() => {
         if (JSON.stringify(responses) !== JSON.stringify(displayedResponses)) {
@@ -47,6 +49,22 @@ const OutputConsole: React.FC = () => {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [commandHistory]);
+
+    useEffect(() => {
+        if (responses.gitInstructions !== prevGitInstructionsRef.current) {
+            setIsLoading(true);
+            setCommandHistory([]);
+
+            // Simulate loading time (you can adjust this as needed)
+            const loadingTimeout = setTimeout(() => {
+                setIsLoading(false);
+            }, 3000);
+
+            prevGitInstructionsRef.current = responses.gitInstructions;
+
+            return () => clearTimeout(loadingTimeout);
+        }
+    }, [responses.gitInstructions]);
 
     const handleCommandSubmit = (command: string, gptResponse: string) => {
         setCommandHistory([...commandHistory, { command, output: gptResponse }]);
@@ -83,22 +101,25 @@ const OutputConsole: React.FC = () => {
                     ref={scrollRef}
                     className={`overflow-y-auto ${isMinimized ? 'h-0' : 'h-52'} transition-all duration-300`}
                 >
-                    <pre className="whitespace-pre-wrap">
-                        <span className="text-yellow-500">
-                            {isUpdating ? "Updating user information...\n" : ""}
-                        </span>
-                        {JSON.stringify(displayedResponses, null, 2)}
-                    </pre>
-                    {commandHistory.map((item, index) => (
-                        <div key={index} className="mt-2">
-                            <div className="text-blue-400">
-                                $ software-composer ~ % <span className="text-white">{item.command}</span>
-                            </div>
-                            <div className="text-green-400 ml-4">Output: {item.output}</div>
-                        </div>
-                    ))}
+                    {isLoading ? (
+                        <div className="text-yellow-500">Your results are loading...</div>
+                    ) : (
+                        <>
+                            <pre className="whitespace-pre-wrap">
+                                {JSON.stringify(responses, null, 2)}
+                            </pre>
+                            {commandHistory.map((item, index) => (
+                                <div key={index} className="mt-2">
+                                    <div className="text-blue-400">
+                                        $ software-composer ~ % <span className="text-white">{item.command}</span>
+                                    </div>
+                                    <div className="text-green-400 ml-4">Output: {item.output}</div>
+                                </div>
+                            ))}
+                        </>
+                    )}
                 </div>
-                <ConsoleCommand isMinimized={isMinimized} onCommandSubmit={handleCommandSubmit} reset={isUpdating} />
+                <ConsoleCommand isMinimized={isMinimized} onCommandSubmit={handleCommandSubmit} reset={isLoading} />
             </div>
         </Draggable>
     );

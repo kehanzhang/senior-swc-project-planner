@@ -72,9 +72,7 @@ export default function QuestionnaireStep({
 }) {
     if (index >= stepData.length) {
         return (
-            <div className="flex flex-col items-center justify-center">
-                <h1 className="text-4xl font-bold mb-4">MAKE MORE MONEY</h1>
-            </div>
+            null
         )
     }
     const { question, responseKey, contentType, buttonLabels, imagePaths } = stepData[index];
@@ -96,7 +94,7 @@ export default function QuestionnaireStep({
         debouncedUpdateResponse(value);
     };
 
-    const manageIndex = (label: string) => {
+    const manageIndex = async (label: string) => {
         console.log(`Trail: ${trail}`);
         console.log(`Current step: ${index}`);
         console.log(`Option selected: ${label}`);
@@ -110,6 +108,8 @@ export default function QuestionnaireStep({
                 }
                 break;
             case 5:
+                // Simulate a delay of 3 seconds
+                await new Promise(resolve => setTimeout(resolve, 3000));
                 console.log(`Pushing to response page`);
                 router.push('/response');
                 break;
@@ -124,6 +124,16 @@ export default function QuestionnaireStep({
         console.log(`Updating response for ${responseKey} with value: ${value}`);
         if (index === 0) {
             updateResponse('aiModel', value);
+        } else if (index === 1) {
+            updateResponse('setupInstructions', value === 'Yes');
+        } else if (index === 2) {
+            updateResponse('setupInstructions', value);
+        } else if (index === 3) {
+            updateResponse('operatingSystem', value.toLowerCase());
+        } else if (index === 4) {
+            updateResponse('firebaseInstructions', value === 'Yes');
+        } else if (index === 5) {
+            updateResponse('gitInstructions', value === 'Yes');
         }
 
         manageIndex(value);
@@ -152,7 +162,7 @@ export default function QuestionnaireStep({
 
             {index > 0 && <Button onClick={handleBack}>Back</Button>}
             <div className="flex flex-col items-center justify-center w-full">
-                <p className="text-2xl mb-4 text-center">{question}</p>
+                <p className="text-2xl mb-4 text-center text-semibold">{question}</p>
                 {contentType === 'textInput' && (
                     <form onSubmit={handleTextSubmit} className="w-full max-w-4xl mb-12 flex justify-center">
                         <Textarea
