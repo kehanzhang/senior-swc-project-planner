@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,8 +35,15 @@ export function ProjectStep({
   };
 
   const contentVariants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.05 } },
+    hidden: { opacity: 0, height: 0 },
+    visible: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        duration: 0.3,
+        staggerChildren: 0.05,
+      },
+    },
   };
 
   const itemVariants = {
@@ -52,7 +59,7 @@ export function ProjectStep({
       variants={cardVariants}
     >
       <Card className="mb-4 rounded-sm shadow-none">
-        <motion.div variants={contentVariants}>
+        <motion.div>
           <CardHeader>
             <motion.div variants={itemVariants} className="flex items-center space-x-2">
               <Checkbox
@@ -73,110 +80,126 @@ export function ProjectStep({
               <CardDescription className="text-lg">{step.description}</CardDescription>
             </motion.div>
           </CardHeader>
-          <div className={`relative ${completed && !expanded ? "h-20 overflow-hidden" : ""}`}>
-            <CardContent className={`space-y-4 ${completed && !expanded ? "blur-sm" : ""}`}>
-              {/* API Routes */}
-              {step.apiRoutes && step.apiRoutes.length > 0 && (
-                <motion.div variants={itemVariants}>
-                  <h3 className="font-semibold mb-2">API Routes:</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {step.apiRoutes.map((route, idx) => (
-                      <Badge key={idx} variant="secondary">
-                        {route}
-                      </Badge>
-                    ))}
-                  </div>
-                  <Separator className="mt-4" />
-                </motion.div>
-              )}
-
-              {/* Features */}
-              {step.features && step.features.length > 0 && (
-                <motion.div variants={itemVariants}>
-                  <h3 className="font-semibold mb-2">Features:</h3>
-                  <ul className="list-disc list-inside">
-                    {step.features.map((feature, idx) => (
-                      <li key={idx}>{feature}</li>
-                    ))}
-                  </ul>
-                  <Separator className="mt-4" />
-                </motion.div>
-              )}
-
-              {/* Components */}
-              {step.components && step.components.length > 0 && (
-                <motion.div variants={itemVariants}>
-                  <h3 className="font-semibold mb-2">Components:</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {step.components.map((component, idx) => (
-                      <Badge key={idx} variant="outline">
-                        {component}
-                      </Badge>
-                    ))}
-                  </div>
-                  <Separator className="mt-4" />
-                </motion.div>
-              )}
-
-              {/* Considerations */}
-              {step.considerations && step.considerations.length > 0 && (
-                <motion.div variants={itemVariants}>
-                  <h3 className="font-semibold mb-2">Considerations:</h3>
-                  <ul className="list-disc list-inside">
-                    {step.considerations.map((consideration, idx) => (
-                      <li key={idx} className="text-orange-600">
-                        {consideration}
-                      </li>
-                    ))}
-                  </ul>
-                  <Separator className="mt-4" />
-                </motion.div>
-              )}
-
-              {/* Actionable Steps */}
-              {step.actionableSteps && step.actionableSteps.length > 0 && (
-                <motion.div variants={itemVariants}>
-                  <h3 className="font-semibold mb-2">Actionable Steps:</h3>
-                  <div className="space-y-2">
-                    {step.actionableSteps.map((actionableStep, idx) => (
-                      <div key={idx} className="flex items-center space-x-2">
-                        <Checkbox id={`step-${step.step}-action-${idx}`} />
-                        <label
-                          htmlFor={`step-${step.step}-action-${idx}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {actionableStep}
-                        </label>
+          <AnimatePresence initial={false}>
+            {(!completed || expanded) && (
+              <motion.div
+                key="content"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={contentVariants}
+              >
+                <CardContent className="space-y-4">
+                  {/* API Routes */}
+                  {step.apiRoutes && step.apiRoutes.length > 0 && (
+                    <motion.div variants={itemVariants}>
+                      <h3 className="font-semibold mb-2">API Routes:</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {step.apiRoutes.map((route, idx) => (
+                          <Badge key={idx} variant="secondary">
+                            {route}
+                          </Badge>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </CardContent>
-          </div>
+                      <Separator className="mt-4" />
+                    </motion.div>
+                  )}
+
+                  {/* Features */}
+                  {step.features && step.features.length > 0 && (
+                    <motion.div variants={itemVariants}>
+                      <h3 className="font-semibold mb-2">Features:</h3>
+                      <ul className="list-disc list-inside">
+                        {step.features.map((feature, idx) => (
+                          <li key={idx}>{feature}</li>
+                        ))}
+                      </ul>
+                      <Separator className="mt-4" />
+                    </motion.div>
+                  )}
+
+                  {/* Components */}
+                  {step.components && step.components.length > 0 && (
+                    <motion.div variants={itemVariants}>
+                      <h3 className="font-semibold mb-2">Components:</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {step.components.map((component, idx) => (
+                          <Badge key={idx} variant="outline">
+                            {component}
+                          </Badge>
+                        ))}
+                      </div>
+                      <Separator className="mt-4" />
+                    </motion.div>
+                  )}
+
+                  {/* Considerations */}
+                  {step.considerations && step.considerations.length > 0 && (
+                    <motion.div variants={itemVariants}>
+                      <h3 className="font-semibold mb-2">Considerations:</h3>
+                      <ul className="list-disc list-inside">
+                        {step.considerations.map((consideration, idx) => (
+                          <li key={idx} className="text-orange-600">
+                            {consideration}
+                          </li>
+                        ))}
+                      </ul>
+                      <Separator className="mt-4" />
+                    </motion.div>
+                  )}
+
+                  {/* Actionable Steps */}
+                  {step.actionableSteps && step.actionableSteps.length > 0 && (
+                    <motion.div variants={itemVariants}>
+                      <h3 className="font-semibold mb-2">Actionable Steps:</h3>
+                      <div className="space-y-2">
+                        {step.actionableSteps.map((actionableStep, idx) => (
+                          <div key={idx} className="flex items-center space-x-2">
+                            <Checkbox id={`step-${step.step}-action-${idx}`} />
+                            <label
+                              htmlFor={`step-${step.step}-action-${idx}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              {actionableStep}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </CardContent>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
-        {completed && <div className="h-12" />}
         {completed && (
-          <div className="absolute bottom-0 left-0 right-0 flex justify-center p-2 bg-gradient-to-t from-background to-transparent">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onToggleExpand(step.step)}
-              className="flex items-center"
-            >
-              {expanded ? (
-                <>
-                  <ChevronUp className="mr-2 h-4 w-4 " />
-                  Collapse
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="mr-2 h-4 w-4" />
-                  Show
-                </>
-              )}
-            </Button>
-          </div>
+          <motion.div
+            className="relative h-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center p-2 bg-gradient-to-t from-background to-transparent">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onToggleExpand(step.step)}
+                className="flex items-center"
+              >
+                {expanded ? (
+                  <>
+                    <ChevronUp className="mr-2 h-4 w-4 " />
+                    Collapse
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="mr-2 h-4 w-4" />
+                    Show
+                  </>
+                )}
+              </Button>
+            </div>
+          </motion.div>
         )}
       </Card>
     </motion.div>
