@@ -49,6 +49,7 @@ export async function generateSteps(idea: string) {
       components: z.array(z.string()).optional(),
       considerations: z.array(z.string()).optional(),
       actionableSteps: z.array(z.string()).optional(),
+      type: z.literal("roadmap"), // Add this line
     }) satisfies z.ZodType<Step>;
 
     const { partialObjectStream } = await streamObject({

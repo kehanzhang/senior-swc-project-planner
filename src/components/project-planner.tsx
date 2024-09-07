@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Add this import
+import { motion, AnimatePresence } from "framer-motion";
 import { ProjectStep } from "@/components/project-step";
 import { Step } from "@/lib/types/project";
 import { GenerateIdeaInput } from "@/components/GenerateIdeaInput";
@@ -9,6 +9,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
 import { AnimatedEllipsis } from "./AnimatedEllipsis";
 import { generateSteps } from "@/app/actions/generateSteps";
 import { readStreamableValue } from "ai/rsc";
+import { containerVariants, itemVariants } from "@/lib/utils/variants";
 
 export function ProjectPlanner() {
   const [projectData, setProjectData] = useState<Step[]>([]);
@@ -45,28 +46,6 @@ export function ProjectPlanner() {
     setExpandedSteps((prev) =>
       prev.includes(stepNumber) ? prev.filter((step) => step !== stepNumber) : [...prev, stepNumber]
     );
-  };
-
-  const springConfig = { stiffness: 300, damping: 30 };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", ...springConfig },
-    },
   };
 
   return (

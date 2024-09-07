@@ -7,4 +7,7 @@ export interface Step {
   components?: string[];
   considerations?: string[];
   actionableSteps?: string[];
+  videoId?: string;
+  timestamps?: string[];
+  type: "setup" | "roadmap";
 }
