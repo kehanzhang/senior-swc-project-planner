@@ -54,7 +54,6 @@ export async function generateSteps(idea: string) {
     });
 
     for await (const partialObject of partialObjectStream) {
-      console.log(partialObject);
       stream.update(partialObject);
     }
 
