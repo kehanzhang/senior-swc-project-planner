@@ -30,8 +30,15 @@ export function ProjectStep({
   });
 
   const cardVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } },
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
   };
 
   const contentVariants = {
@@ -59,7 +66,7 @@ export function ProjectStep({
       variants={cardVariants}
     >
       <Card className="mb-4 rounded-sm shadow-none">
-        <motion.div>
+        <motion.div variants={contentVariants}>
           <CardHeader>
             <motion.div variants={itemVariants} className="flex items-center space-x-2">
               <Checkbox
