@@ -15,7 +15,6 @@ export function processUserResponses(responses: UserResponses): Section[] {
   if (responses.setupInstructions) {
     sections.push({
       title: "Replit Basics",
-      content: "Watch the video for Replit basics.",
       videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
       timestamps: [
         "0:00 - Creating an account/logging in",
@@ -34,7 +33,6 @@ export function processUserResponses(responses: UserResponses): Section[] {
   if (responses.setupInstructions) {
     sections.push({
       title: "Cursor Basics",
-      content: "Watch the video for Cursor basics.",
       videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
       timestamps: [
         "1:20 - How to login to Cursor",
@@ -61,7 +59,6 @@ export function processUserResponses(responses: UserResponses): Section[] {
     }
     sections.push({
       title: "Connecting Replit and Cursor",
-      content: "Watch the video for connecting Replit and Cursor.",
       videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
       timestamps,
     });
@@ -71,7 +68,6 @@ export function processUserResponses(responses: UserResponses): Section[] {
   if (responses.firebaseInstructions) {
     sections.push({
       title: "Firebase Instructions",
-      content: "Watch the video for Firebase instructions.",
       videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
       timestamps: ["1:21 - What Replit secrets is"],
     });
@@ -81,8 +77,16 @@ export function processUserResponses(responses: UserResponses): Section[] {
   if (responses.gitInstructions) {
     sections.push({
       title: "Git Instructions",
-      content:
-        "Git instructions have been requested. Please refer to the project-specific documentation for detailed Git setup and workflow.",
+      videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
+      timestamps: [
+        "1:20 - How to login to Cursor",
+        "1:30 - How to use chat",
+        "1:40 - How to use composer",
+        "1:50 - How the app is laid out",
+        "2:00 - Example of using the chat",
+        "2:10 - Example of using the composer",
+        "2:20 - Breakdown of Cursor pro vs free",
+      ],
     });
   }
 
