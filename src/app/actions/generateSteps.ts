@@ -52,7 +52,7 @@ export async function generateSteps(idea: string) {
     }) satisfies z.ZodType<Step>;
 
     const { partialObjectStream } = await streamObject({
-      model: openai("gpt-4"),
+      model: openai("gpt-4o"),
       messages: [{ role: "user", content: prompt }],
       output: "array",
       schema: StepSchema,
