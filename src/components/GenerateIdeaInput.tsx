@@ -21,14 +21,14 @@ export function GenerateIdeaInput({ onGenerateSteps, isGenerating }: GenerateIde
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto">
-      <div className="flex space-x-2">
+      <div className="flex relative border border-gray-300 rounded-md py-2 px-2">
         <Input
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
           placeholder="Enter your project idea..."
-          className="flex-grow"
+          className="border-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 shadow-none"
         />
-        <Button type="submit" disabled={isGenerating}>
+        <Button type="submit" disabled={isGenerating || !idea || idea.length === 0}>
           {isGenerating ? (
             <>
               <LoadingSpinner />
