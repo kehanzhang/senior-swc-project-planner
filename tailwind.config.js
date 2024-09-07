@@ -74,11 +74,18 @@ module.exports = {
     				to: {
     					height: '0'
     				}
-    			}
+    			},
+    			ellipsis: {
+    				'0%': { content: '"."' },
+    				'33%': { content: '".."' },
+    				'66%': { content: '"..."' },
+    				'100%': { content: '"..."' },
+    			},
     		},
     		animation: {
     			'accordion-down': 'accordion-down 0.2s ease-out',
-    			'accordion-up': 'accordion-up 0.2s ease-out'
+    			'accordion-up': 'accordion-up 0.2s ease-out',
+    			ellipsis: 'ellipsis 1.5s steps(4, end) infinite',
     		}
     	}
     },
