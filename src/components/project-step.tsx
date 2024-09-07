@@ -125,6 +125,7 @@ export function ProjectStep({
             </div>
           )}
         </CardContent>
+        {completed && <div className="h-12" />}
         {completed && (
           <div className="absolute bottom-0 left-0 right-0 flex justify-center p-2 bg-gradient-to-t from-background to-transparent">
             <Button
@@ -135,7 +136,7 @@ export function ProjectStep({
             >
               {expanded ? (
                 <>
-                  <ChevronUp className="mr-2 h-4 w-4" />
+                  <ChevronUp className="mr-2 h-4 w-4 " />
                   Collapse
                 </>
               ) : (
