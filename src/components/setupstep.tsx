@@ -11,7 +11,7 @@ interface SetupStep {
     step: number;
     title: string;
     description: string;
-    videoId: string;
+    videoLink: string;
     timestamps: string[];
 }
 
@@ -80,6 +80,11 @@ export function SetupStep({
         }
     };
 
+    const getEmbedUrl = (videoLink: string) => {
+        const videoId = videoLink.split('/').pop();
+        return `https://share.descript.com/embed/${videoId}`;
+    };
+
     return (
         <motion.div
             ref={ref}
@@ -87,7 +92,7 @@ export function SetupStep({
             animate={inView ? "visible" : "hidden"}
             variants={cardVariants}
         >
-            <Card className="mb-4 rounded-sm shadow-none">
+            <Card className="mb-4 rounded-sm shadow-none w-full">
                 <motion.div variants={contentVariants}>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div className="flex items-center space-x-2">
@@ -132,8 +137,9 @@ export function SetupStep({
                                         <h3 className="font-semibold mb-2">Video Tutorial:</h3>
                                         <div className="aspect-w-16 aspect-h-9">
                                             <iframe
-                                                src={`https://www.youtube.com/embed/${step.videoId}`}
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                src={getEmbedUrl(step.videoLink)}
+                                                width="640"
+                                                height="360"
                                                 allowFullScreen
                                             ></iframe>
                                         </div>
@@ -147,10 +153,11 @@ export function SetupStep({
                                             {step.timestamps.map((timestamp, idx) => {
                                                 const [time, description] = timestamp.split(' - ');
                                                 const seconds = getTimestampSeconds(time);
+                                                const timestampUrl = `${step.videoLink}?t=${seconds}`;
                                                 return (
                                                     <li key={idx}>
                                                         <a
-                                                            href={`https://www.youtube.com/watch?v=${step.videoId}&t=${seconds}s`}
+                                                            href={timestampUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-blue-500 hover:underline"

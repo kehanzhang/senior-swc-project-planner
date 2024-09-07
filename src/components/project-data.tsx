@@ -51,7 +51,7 @@ export function ProjectData() {
       <motion.div variants={containerVariants} initial="hidden" animate="visible">
         <AnimatePresence>
           {responses.projectData.map((step) => (
-            <motion.div key={step.step} variants={itemVariants}>
+            <motion.div key={step.step} variants={itemVariants} className="max-w-3xl">
               <ProjectStep
                 step={step}
                 completed={completedSteps.includes(step.step)}
