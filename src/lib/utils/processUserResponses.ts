@@ -20,11 +20,14 @@ export function processUserResponses(responses: UserResponses): Section[] {
   }
 
   // Replit Basics
-  if (responses.setupInstructions) {
+  if (
+    responses.setupInstructions &&
+    responses.setupInstructions.includes("Replit basics")
+  ) {
     sections.push({
       title: "Replit Basics",
       content: "Watch the video for Replit basics.",
-      videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
+      videoLink: "https://share.descript.com/view/wrXgGVEp0cE",
       timestamps: [
         "0:00 - Creating an account/logging in",
         "1:00 - What Replit is",
@@ -39,38 +42,47 @@ export function processUserResponses(responses: UserResponses): Section[] {
   }
 
   // Cursor Basics
-  if (responses.setupInstructions) {
+  if (
+    responses.setupInstructions &&
+    responses.setupInstructions.includes("Cursor basics")
+  ) {
     sections.push({
       title: "Cursor Basics",
       content: "Watch the video for Cursor basics.",
-      videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
+      videoLink: "https://share.descript.com/view/2r27Uq67Q3V",
       timestamps: [
-        "1:20 - How to login to Cursor",
-        "1:30 - How to use chat",
-        "1:40 - How to use composer",
-        "1:50 - How the app is laid out",
-        "2:00 - Example of using the chat",
-        "2:10 - Example of using the composer",
-        "2:20 - Breakdown of Cursor pro vs free",
+        "0:00 - Downloading Cursor",
+        "0:10 - Pro account and composer",
+        "0:19 - Cursor settings",
+        "0:41 - Using Claude 3.5 Sonnet",
       ],
     });
   }
 
   // Connecting Replit and Cursor
-  if (responses.setupInstructions) {
+  //TODO come back for timestamps
+  if (
+    responses.setupInstructions &&
+    responses.setupInstructions.includes("connecting the two")
+  ) {
     const timestamps = [
-      "1:00 - Getting the SSH key",
-      "1:10 - Adding the SSH key to Replit",
-      "1:20 - Connecting Replit to Cursor for the first time",
-      "1:30 - Connecting Replit to Cursor after the first time",
+      "0:00 - How they all work together",
+      "0:29 - Getting the SSH keys from Replit",
+      "0:46 - Integrated terminal and extensions",
+
+      "1:30 - Getting the SSH key from Cursor",
+      "2:23 - Pasting the SSH key into Replit",
+      "2:58 - SSH-ing into Replit on Cursor",
+      "3:58 - Finding our project",
     ];
-    if (responses.operatingSystem === "windows") {
-      timestamps.push("1:40 - Connecting Cursor for Windows");
-    }
+    //TODO
+    // if (responses.operatingSystem === "windows") {
+    //   timestamps.push("1:40 - Connecting Cursor for Windows");
+    // }
     sections.push({
       title: "Connecting Replit and Cursor",
       content: "Watch the video for connecting Replit and Cursor.",
-      videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
+      videoLink: "https://share.descript.com/view/wSyeUgLHVkp",
       timestamps,
     });
   }
@@ -79,38 +91,58 @@ export function processUserResponses(responses: UserResponses): Section[] {
   if (responses.firebaseInstructions) {
     sections.push({
       title: "Firebase Instructions",
-      content: "Watch the video for Firebase instructions.",
-      videoLink: "https://www.youtube.com/watch?v=DXQ4sU6KK-I",
-      timestamps: ["1:21 - What Replit secrets is"],
+      content:
+        "Watch the video for Firebase instructions for using the nextJs template.",
+      videoLink: "https://share.descript.com/view/hpFXnbN32vL",
+      timestamps: [
+        "0:00 - Creating account/Logging in",
+        "0:16 - Creating a new project + naming it",
+        "0:32 - Disable Google Analytics",
+        "0:43 - Registering a web application",
+        "1:00 - Using the Firebase keys in Replit",
+        "2:01 - Adding a Firebase database",
+        "3:01 - Setting up Authentication",
+        "3:27 - Connecting the database to Replit (domain setup)",
+      ],
     });
   }
 
+  if (responses.usingToolsInProject) {
+    sections.push({
+      title: "Using Cursor with Replit",
+      content: "Watch the video a guide on how I use Cursor with Replit.",
+      videoLink: "https://share.descript.com/view/wSyeUgLHVkp",
+      timestamps: [
+        "0:00 - Introduction to Cursor",
+        "0:08 - Syncing",
+        "0:22 - How to use Cursor Composer",
+        "0:53 - Our template and paths",
+        "1:37 - Adding template path context to the Composer",
+        "1:43 - Adding the codebase context to the Composer",
+        "2:02 - How composer works",
+        "2:23 - Saving the composer's work",
+        "2:51 - Debugging errors",
+        "3:55 - Debugging example: following the composer's instructions",
+        "4:41 - Working with Composer's output [save, reject, reapply]",
+        "5:45 - Whole workflow walkthrough",
+        "6:42 - npm install package example",
+      ],
+    });
+  }
   // Git Instructions
   if (responses.gitInstructions) {
     sections.push({
-      title: "Git Instructions",
-      content:
-        "Git instructions have been requested. Please refer to the project-specific documentation for detailed Git setup and workflow.",
+      title: "Using the git feature on Replit",
+      content: "Watch the video guide on how to use Git with Replit.",
+      videoLink: "https://share.descript.com/view/wSyeUgLHVkp",
+      timestamps: [
+        "0:00 - Finding Git on Replit",
+        "0:07 - How Git helps",
+        "0:20 - How to save your work with Git",
+        "0:38 - How to revert to a previous state",
+      ],
     });
   }
-
-  // Helper function to extract video ID from YouTube URL
-  const getVideoId = (url: string) => {
-    const match = url.match(
-      /(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([\w-]{11})/
-    );
-    return match ? match[1] : null;
-  };
-
-  // Update each section that has a videoLink
-  sections.forEach((section) => {
-    if (section.videoLink) {
-      const videoId = getVideoId(section.videoLink);
-      if (videoId) {
-        section.videoId = videoId;
-      }
-    }
-  });
 
   return sections;
 }
