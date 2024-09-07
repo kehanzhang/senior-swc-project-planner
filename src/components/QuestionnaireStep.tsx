@@ -1,10 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  useUserResponse,
-  UserResponses,
-} from "@/lib/contexts/UserResponseContext";
+import { useUserResponse, UserResponses } from "@/lib/contexts/UserResponseContext";
+import { useQuestionnaire } from "@/lib/contexts/QuestionnaireContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { debounce } from "lodash"; // Make sure to install lodash if not already installed
@@ -56,31 +54,19 @@ const stepData: StepData[] = [
   },
 ];
 
-export default function QuestionnaireStep({
-  index,
-  setIndex,
-  trail,
-  setTrail,
-}: {
-  index: number;
-  setIndex: (index: number) => void;
-  trail: number[];
-  setTrail: (trail: number[]) => void;
-}) {
-  const { question, responseKey, contentType, buttonLabels, imagePaths } =
-    stepData[index];
+export default function QuestionnaireStep() {
+  const { step, setStep, trail, setTrail } = useQuestionnaire();
+  const { question, responseKey, contentType, buttonLabels, imagePaths } = stepData[step];
   const { responses, updateResponse } = useUserResponse();
   const router = useRouter();
-  const [textInput, setTextInput] = useState(
-    (responses[responseKey] as string) || "",
-  );
+  const [textInput, setTextInput] = useState((responses[responseKey] as string) || "");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   const debouncedUpdateResponse = useCallback(
     debounce((value: string) => {
       updateResponse(responseKey, value);
     }, 500),
-    [responseKey, updateResponse],
+    [responseKey, updateResponse]
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -91,12 +77,12 @@ export default function QuestionnaireStep({
 
   const manageIndex = async (label: string) => {
     console.log(`Trail: ${trail}`);
-    console.log(`Current step: ${index}`);
+    console.log(`Current step: ${step}`);
     console.log(`Option selected: ${label}`);
 
     let jumpIndex = 1;
 
-    switch (index) {
+    switch (step) {
       case 1:
         if (label !== "Yes") {
           //skip setup questions
@@ -112,23 +98,21 @@ export default function QuestionnaireStep({
       default:
     }
 
-    setTrail([...trail, index]);
-    setIndex(index + jumpIndex);
+    setTrail([...trail, step]);
+    setStep(step + jumpIndex);
   };
 
   const handleNext = (value: string) => {
     console.log(`Updating response for ${responseKey} with value: ${value}`);
-    if (index === 0) {
-      updateResponse("aiModel", value);
-    } else if (index === 1) {
+    if (step === 0) {
       updateResponse("setupInstructions", value === "Yes");
-    } else if (index === 2) {
+    } else if (step === 1) {
       updateResponse("setupInstructions", value);
-    } else if (index === 3) {
+    } else if (step === 2) {
       updateResponse("operatingSystem", value.toLowerCase());
-    } else if (index === 4) {
+    } else if (step === 3) {
       updateResponse("firebaseInstructions", value === "Yes");
-    } else if (index === 5) {
+    } else if (step === 4) {
       updateResponse("gitInstructions", value === "Yes");
     }
 
@@ -148,18 +132,18 @@ export default function QuestionnaireStep({
       const previousIndex = newTrail.pop();
       setTrail(newTrail);
       if (previousIndex !== undefined) {
-        setIndex(previousIndex);
+        setStep(previousIndex);
       }
     }
   };
 
-  if (index >= stepData.length) {
+  if (step >= stepData.length) {
     return null;
   }
 
   return (
     <main className="flex min-h-screen p-24 relative">
-      {index > 0 && (
+      {step > 0 && (
         <Button onClick={handleBack} className="fixed top-12 left-12 z-10">
           Back
         </Button>
@@ -167,10 +151,7 @@ export default function QuestionnaireStep({
       <div className="flex flex-col items-center justify-center w-full">
         <p className="text-2xl mb-4 text-center text-semibold">{question}</p>
         {contentType === "textInput" && (
-          <form
-            onSubmit={handleTextSubmit}
-            className="w-full max-w-4xl mb-12 flex justify-center"
-          >
+          <form onSubmit={handleTextSubmit} className="w-full max-w-4xl mb-12 flex justify-center">
             <Textarea
               className="w-full mb-4"
               placeholder="Enter your response here..."
@@ -185,12 +166,7 @@ export default function QuestionnaireStep({
           <div className="w-full max-w-4xl">
             <div className="flex flex-wrap justify-center gap-8 w-full">
               <div className="mb-16 p-4 rounded-lg">
-                <Image
-                  src={imagePaths[0]}
-                  alt="Single Image"
-                  width={600}
-                  height={300}
-                />
+                <Image src={imagePaths[0]} alt="Single Image" width={600} height={300} />
               </div>
             </div>
           </div>
@@ -206,15 +182,13 @@ export default function QuestionnaireStep({
                     label === "continue"
                       ? "default"
                       : selectedOptions.includes(label)
-                        ? "default"
-                        : "outline"
+                      ? "default"
+                      : "outline"
                   }
                   className="w-72 h-12 text-base"
                   onClick={() => {
                     if (selectedOptions.includes(label)) {
-                      setSelectedOptions(
-                        selectedOptions.filter((option) => option !== label),
-                      );
+                      setSelectedOptions(selectedOptions.filter((option) => option !== label));
                     } else {
                       setSelectedOptions([...selectedOptions, label]);
                     }
@@ -241,18 +215,16 @@ export default function QuestionnaireStep({
             <div className="flex flex-wrap justify-center gap-8 w-full h-full">
               {buttonLabels.map((label, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  {contentType === "imageSelection" &&
-                    imagePaths &&
-                    imagePaths[index] && (
-                      <div className="mb-16 p-4 rounded-lg">
-                        <Image
-                          src={imagePaths[index]}
-                          alt={`Option ${index + 1}`}
-                          width={200}
-                          height={200}
-                        />
-                      </div>
-                    )}
+                  {contentType === "imageSelection" && imagePaths && imagePaths[index] && (
+                    <div className="mb-16 p-4 rounded-lg">
+                      <Image
+                        src={imagePaths[index]}
+                        alt={`Option ${index + 1}`}
+                        width={200}
+                        height={200}
+                      />
+                    </div>
+                  )}
                   <Button
                     variant="outline"
                     className="w-72 h-12 text-base"
