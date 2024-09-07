@@ -10,19 +10,24 @@ export async function generateSteps(idea: string) {
   "use server";
 
   const stream = createStreamableValue();
+  const loadingState = createStreamableValue({ loading: true });
 
   (async () => {
     const prompt = `
-      As an expert Next.js developer, outline the development steps for this project:
+      You are an expert Next.js developer helping a user who does not know how to code on a website called Software Composers.
+      
+      They have an idea for a project and want to know the exact steps to develop it.
 
-      ${idea}
+      Idea: ${idea}
 
-      Context: Next.js (App Router) project with Firebase integration. Replit and Cursor are set up for development.
+      Context: We have already helped the user setup their development environment with Next.js 14 (App Router) project with Firebase integration. They are using Replit to preview and deploy their project. They are using Cursor to tell AI to generate code for them.
+
+      Now, you must generate the next steps for the user to follow. These are mainly features that they need to implement. You give them an outline of the clear next steps to go to deploying their project.
 
       For each major feature of the app:
       1. List the feature and its core functionality
       2. Outline the implementation steps (components, API routes, Firebase integration)
-      3. Mention any technical challenges or considerations
+      3. Mention any technical challenges or considerations in simple terms
 
       Include steps for:
       - Component and page creation
@@ -58,7 +63,8 @@ export async function generateSteps(idea: string) {
     }
 
     stream.done();
+    loadingState.update({ loading: false });
   })();
 
-  return { steps: stream.value };
+  return { steps: stream.value, loadingState: loadingState.value };
 }

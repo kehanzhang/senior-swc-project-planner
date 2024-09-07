@@ -23,7 +23,7 @@ export function ProjectStep({
   onToggleExpand,
 }: StepProps) {
   return (
-    <Card className="mb-6">
+    <Card className="mb-4 rounded-sm shadow-none">
       <CardHeader>
         <div className="flex items-center space-x-2">
           <Checkbox
@@ -34,13 +34,13 @@ export function ProjectStep({
           <CardTitle className="text-xl">
             <label
               htmlFor={`step-${step.step}`}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-xl font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Step {step.step}: {step.title}
             </label>
           </CardTitle>
         </div>
-        <CardDescription>{step.description}</CardDescription>
+        <CardDescription className="text-lg">{step.description}</CardDescription>
       </CardHeader>
       <div className={`relative ${completed && !expanded ? "h-20 overflow-hidden" : ""}`}>
         <CardContent className={`space-y-4 ${completed && !expanded ? "blur-sm" : ""}`}>
