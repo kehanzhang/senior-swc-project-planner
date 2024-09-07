@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useUserResponse, UserResponses } from '@/lib/contexts/UserResponseContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { debounce } from 'lodash'; // Make sure to install lodash if not already installed
+import { debounce } from 'lodash';
 
 // Define a type for the step data
 type StepData = {

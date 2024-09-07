@@ -3,73 +3,80 @@
 import React, { useEffect, useState } from 'react';
 import { useUserResponse } from '@/lib/contexts/UserResponseContext';
 import { processUserResponses } from '@/lib/utils/processUserResponses';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { parseTimestamp } from "@/lib/utils/timeUtils";
-interface Section {
-    title: string;
-    content?: string;
-    videoLink?: string;
-    timestamps?: string[];
-    videoId?: string; // Add this line
-}
+import { Step } from "@/lib/types/project";
+import { ProjectStep } from "@/components/project-step";
+import { motion, AnimatePresence } from "framer-motion";
+import { containerVariants, itemVariants } from "@/lib/utils/variants";
 
 export default function Response() {
     const { responses } = useUserResponse();
-    const [guideContent, setGuideContent] = useState<Section[]>([]);
+    const [guideContent, setGuideContent] = useState<Step[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+    const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
 
     useEffect(() => {
-        const processedResponses = processUserResponses(responses);
-        setGuideContent(processedResponses);
+        const fetchGuideContent = async () => {
+            try {
+                setIsLoading(true);
+                const processedResponses = await processUserResponses(responses);
+                setGuideContent(processedResponses);
+                setError(null);
+            } catch (err) {
+                console.error("Error processing responses:", err);
+                setError("An error occurred while generating the guide. Please try again.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchGuideContent();
     }, [responses]);
 
+    const toggleStep = (stepNumber: number) => {
+        setCompletedSteps((prev) =>
+            prev.includes(stepNumber) ? prev.filter((step) => step !== stepNumber) : [...prev, stepNumber]
+        );
+    };
 
-    console.log(JSON.stringify(guideContent, null, 2));
+    const toggleExpand = (stepNumber: number) => {
+        setExpandedSteps((prev) =>
+            prev.includes(stepNumber) ? prev.filter((step) => step !== stepNumber) : [...prev, stepNumber]
+        );
+    };
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-start p-24">
             <h1 className="text-4xl font-bold mb-8">Your Project Setup Guide</h1>
             <div className="w-full max-w-3xl">
-                {guideContent.map((section, index) => (
-                    <div key={index} className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">{section.title}</h2>
-                        {section.content && <p className="mb-4">{section.content}</p>}
-                        {section.videoId && (
-                            <div className="mb-4">
-                                <div className="relative pb-[56.25%] h-0">
-                                    <iframe
-                                        src={`https://www.youtube.com/embed/${section.videoId}`}
-                                        title={`Video for ${section.title}`}
-                                        className="absolute top-0 left-0 w-full h-full"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
-                                </div>
-                            </div>
-                        )}
-                        {section.timestamps && section.videoId && (
-                            <Accordion type="single" collapsible className="w-full">
-                                <AccordionItem value="timestamps">
-                                    <AccordionTrigger>Relevant timestamps</AccordionTrigger>
-                                    <AccordionContent>
-                                        <ul className="list-disc pl-5">
-                                            {section.timestamps.map((timestamp, i) => {
-                                                const seconds = parseTimestamp(timestamp);
-                                                const embedUrl = `https://www.youtube.com/embed/${section.videoId}?start=${seconds}`;
-                                                return (
-                                                    <li key={i}>
-                                                        <a href={embedUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                                                            {timestamp}
-                                                        </a>
-                                                    </li>
-                                                );
-                                            })}
-                                        </ul>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
-                        )}
-                    </div>
-                ))}
+                {guideContent.length > 0 ? (
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                        <AnimatePresence>
+                            {guideContent.map((step, index) => (
+                                <motion.div key={index} variants={itemVariants}>
+                                    <ProjectStep
+                                        step={{ ...step, step: index + 1 }}
+                                        completed={completedSteps.includes(index + 1)}
+                                        expanded={expandedSteps.includes(index + 1)}
+                                        onToggleStep={toggleStep}
+                                        onToggleExpand={toggleExpand}
+                                    />
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </motion.div>
+                ) : (
+                    <p>No guide content available. Please complete the questionnaire first.</p>
+                )}
             </div>
         </main>
     );
