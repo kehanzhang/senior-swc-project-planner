@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useUserResponse, UserResponses } from '@/lib/contexts/UserResponseContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { debounce } from 'lodash'; // Make sure to install lodash if not already installed
 
 // Define a type for the step data
 type StepData = {
@@ -82,9 +83,17 @@ export default function QuestionnaireStep({
     const [textInput, setTextInput] = useState(responses[responseKey] as string || '');
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
+    const debouncedUpdateResponse = useCallback(
+        debounce((value: string) => {
+            updateResponse(responseKey, value);
+        }, 500),
+        [responseKey, updateResponse]
+    );
+
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setTextInput(e.target.value);
-        updateResponse(responseKey, e.target.value);
+        const value = e.target.value;
+        setTextInput(value);
+        debouncedUpdateResponse(value);
     };
 
     const manageIndex = (label: string) => {
@@ -100,7 +109,7 @@ export default function QuestionnaireStep({
                     jumpIndex = 3
                 }
                 break;
-            case 4:
+            case 5:
                 console.log(`Pushing to response page`);
                 router.push('/response');
                 break;
@@ -113,8 +122,8 @@ export default function QuestionnaireStep({
 
     const handleNext = (value: string) => {
         console.log(`Updating response for ${responseKey} with value: ${value}`);
-        if (index > 0) {
-            updateResponse(responseKey, value);
+        if (index === 0) {
+            updateResponse('aiModel', value);
         }
 
         manageIndex(value);
@@ -142,15 +151,14 @@ export default function QuestionnaireStep({
         <main className="flex min-h-screen p-24">
 
             {index > 0 && <Button onClick={handleBack}>Back</Button>}
-            <div className="flex flex-col items-center justify-center">
-                <p className="text-2xl mb-12 text-center">{question}</p>
-
+            <div className="flex flex-col items-center justify-center w-full">
+                <p className="text-2xl mb-4 text-center">{question}</p>
                 {contentType === 'textInput' && (
-                    <form onSubmit={handleTextSubmit} className="w-full max-w-4xl mb-12">
+                    <form onSubmit={handleTextSubmit} className="w-full max-w-4xl mb-12 flex justify-center">
                         <Textarea
                             className="w-full mb-4"
                             placeholder="Enter your response here..."
-                            rows={10}
+                            rows={2}
                             value={textInput}
                             onChange={handleInputChange}
                         />
@@ -204,8 +212,8 @@ export default function QuestionnaireStep({
 
 
                 {contentType !== 'selectAll' && (
-                    <div className="w-full max-w-4xl">
-                        <div className="flex flex-wrap justify-center gap-8 w-full">
+                    <div className="w-full max-w-4xl ">
+                        <div className="flex flex-wrap justify-center gap-8 w-full h-full">
                             {buttonLabels.map((label, index) => (
                                 <div key={index} className="flex flex-col items-center">
                                     {contentType === 'imageSelection' && imagePaths && imagePaths[index] && (
