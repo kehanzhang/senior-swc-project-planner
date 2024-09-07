@@ -5,7 +5,7 @@ interface Section {
   content?: string;
   videoLink?: string;
   timestamps?: string[];
-  videoId?: string; // Add this line
+  videoId?: string;
 }
 
 export function processUserResponses(responses: UserResponses): Section[] {
