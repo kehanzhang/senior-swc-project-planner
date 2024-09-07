@@ -29,15 +29,14 @@ export function ProjectStep({
     threshold: 0.1,
   });
 
+  const springConfig = { stiffness: 300, damping: 30 };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
+      transition: { type: "spring", ...springConfig },
     },
   };
 
@@ -47,7 +46,8 @@ export function ProjectStep({
       opacity: 1,
       height: "auto",
       transition: {
-        duration: 0.3,
+        type: "spring",
+        ...springConfig,
         staggerChildren: 0.05,
       },
     },
@@ -55,7 +55,24 @@ export function ProjectStep({
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", ...springConfig },
+    },
+  };
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        ...springConfig,
+        delay: i * 0.1,
+      },
+    }),
   };
 
   return (
@@ -99,7 +116,7 @@ export function ProjectStep({
                 <CardContent className="space-y-4">
                   {/* API Routes */}
                   {step.apiRoutes && step.apiRoutes.length > 0 && (
-                    <motion.div variants={itemVariants}>
+                    <motion.div custom={0} variants={sectionVariants}>
                       <h3 className="font-semibold mb-2">API Routes:</h3>
                       <div className="flex flex-wrap gap-2">
                         {step.apiRoutes.map((route, idx) => (
@@ -114,7 +131,7 @@ export function ProjectStep({
 
                   {/* Features */}
                   {step.features && step.features.length > 0 && (
-                    <motion.div variants={itemVariants}>
+                    <motion.div custom={1} variants={sectionVariants}>
                       <h3 className="font-semibold mb-2">Features:</h3>
                       <ul className="list-disc list-inside">
                         {step.features.map((feature, idx) => (
@@ -127,7 +144,7 @@ export function ProjectStep({
 
                   {/* Components */}
                   {step.components && step.components.length > 0 && (
-                    <motion.div variants={itemVariants}>
+                    <motion.div custom={2} variants={sectionVariants}>
                       <h3 className="font-semibold mb-2">Components:</h3>
                       <div className="flex flex-wrap gap-2">
                         {step.components.map((component, idx) => (
@@ -142,7 +159,7 @@ export function ProjectStep({
 
                   {/* Considerations */}
                   {step.considerations && step.considerations.length > 0 && (
-                    <motion.div variants={itemVariants}>
+                    <motion.div custom={3} variants={sectionVariants}>
                       <h3 className="font-semibold mb-2">Considerations:</h3>
                       <ul className="list-disc list-inside">
                         {step.considerations.map((consideration, idx) => (
@@ -157,7 +174,7 @@ export function ProjectStep({
 
                   {/* Actionable Steps */}
                   {step.actionableSteps && step.actionableSteps.length > 0 && (
-                    <motion.div variants={itemVariants}>
+                    <motion.div custom={4} variants={sectionVariants}>
                       <h3 className="font-semibold mb-2">Actionable Steps:</h3>
                       <div className="space-y-2">
                         {step.actionableSteps.map((actionableStep, idx) => (
