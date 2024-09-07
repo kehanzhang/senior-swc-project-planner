@@ -1,117 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Add this import
-import { ProjectStep } from "@/components/project-step";
-import { Step } from "@/lib/types/project";
+import React from "react";
 import { GenerateIdeaInput } from "@/components/GenerateIdeaInput";
-import { LoadingSpinner } from "./LoadingSpinner";
-import { AnimatedEllipsis } from "./AnimatedEllipsis";
-import { generateSteps } from "@/app/actions/generateSteps";
-import { readStreamableValue } from "ai/rsc";
 
 export function ProjectPlanner() {
-  const [projectData, setProjectData] = useState<Step[]>([]);
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const handleGenerateSteps = async (idea: string) => {
-    setIsGenerating(true);
-
-    const { steps: stepsStream, loadingState } = await generateSteps(idea);
-
-    for await (const steps of readStreamableValue(stepsStream)) {
-      if (steps) {
-        setProjectData(steps);
-      }
-    }
-    for await (const loadingDelta of readStreamableValue(loadingState)) {
-      if (loadingDelta) {
-        setIsGenerating(loadingDelta.loading);
-      }
-    }
-  };
-
-  const toggleStep = (stepNumber: number) => {
-    setCompletedSteps((prev) =>
-      prev.includes(stepNumber)
-        ? prev.filter((step) => step !== stepNumber)
-        : [...prev, stepNumber],
-    );
-    // Automatically collapse the step when it's checked
-    setExpandedSteps((prev) => prev.filter((step) => step !== stepNumber));
-  };
-
-  const toggleExpand = (stepNumber: number) => {
-    setExpandedSteps((prev) =>
-      prev.includes(stepNumber)
-        ? prev.filter((step) => step !== stepNumber)
-        : [...prev, stepNumber],
-    );
-  };
-
-  const springConfig = { stiffness: 300, damping: 30 };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", ...springConfig },
-    },
-  };
-
   return (
-    <div className="max-w-4xl mx-auto">
-      <GenerateIdeaInput
-        onGenerateSteps={handleGenerateSteps}
-        isGenerating={isGenerating}
-      />
-      {projectData.length > 0 && (
-        <>
-          <h2 className="text-2xl font-bold my-6">Project Steps</h2>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <AnimatePresence>
-              {projectData.map((step) => (
-                <motion.div key={step.step} variants={itemVariants}>
-                  <ProjectStep
-                    step={step}
-                    completed={completedSteps.includes(step.step)}
-                    expanded={expandedSteps.includes(step.step)}
-                    onToggleStep={toggleStep}
-                    onToggleExpand={toggleExpand}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
-          {isGenerating && (
-            <div className="flex justify-center items-center">
-              <LoadingSpinner />
-              <span className="ml-2 text-sm text-gray-500">
-                Generating more steps
-                <AnimatedEllipsis />
-              </span>
-            </div>
-          )}
-        </>
-      )}
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="max-w-4xl w-full px-4">
+        <h1 className="font-heading text-pretty text-center text-[22px] font-semibold tracking-tighter text-gray-900 sm:text-[30px] md:text-[36px]">
+          What can I help you ship today?
+        </h1>
+        <h2 className="text-balance text-center text-sm text-gray-700">
+          Give us your idea and we&apos;ll generate a step-by-step guide to help you ship it.
+        </h2>
+        <div className="mt-6"></div>
+        <GenerateIdeaInput />
+      </div>
     </div>
   );
 }

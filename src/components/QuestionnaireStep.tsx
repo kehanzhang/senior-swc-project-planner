@@ -19,6 +19,7 @@ type StepData = {
 // Update the stepData array with the correct type
 const stepData: StepData[] = [
   {
+    //0
     question: "Do you want instructions for setting up Replit + Cursor?",
     responseKey: "setupInstructions",
     contentType: "singleImage",
@@ -26,12 +27,14 @@ const stepData: StepData[] = [
     imagePaths: ["/setup.png"],
   },
   {
+    //1
     question: "Select all instructions you want to see",
     responseKey: "setupInstructions",
     contentType: "selectAll",
     buttonLabels: ["Replit basics", "Cursor basics", "connecting the two"],
   },
   {
+    //2
     question: "What operating system are you using?",
     responseKey: "operatingSystem",
     contentType: "imageSelection",
@@ -39,6 +42,7 @@ const stepData: StepData[] = [
     imagePaths: ["/window.webp", "/apple.png"],
   },
   {
+    //3
     question: "Do you want instructions for setting up Firebase?",
     responseKey: "firebaseInstructions",
     contentType: "singleImage",
@@ -46,6 +50,7 @@ const stepData: StepData[] = [
     imagePaths: ["/firebase.png"],
   },
   {
+    //4
     question: "Do you want instructions for setting up Git?",
     responseKey: "gitInstructions",
     contentType: "singleImage",
@@ -58,6 +63,7 @@ export default function QuestionnaireStep() {
   const { step, setStep, trail, setTrail } = useQuestionnaire();
   const { question, responseKey, contentType, buttonLabels, imagePaths } = stepData[step];
   const { responses, updateResponse } = useUserResponse();
+  const isLoading = responses.isLoading;
   const router = useRouter();
   const [textInput, setTextInput] = useState((responses[responseKey] as string) || "");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -81,25 +87,28 @@ export default function QuestionnaireStep() {
     console.log(`Option selected: ${label}`);
 
     let jumpIndex = 1;
-
+    let proceed = true;
     switch (step) {
-      case 1:
+      case 0:
         if (label !== "Yes") {
           //skip setup questions
-          jumpIndex = 3;
+          jumpIndex = 2;
         }
         break;
-      case 5:
+      case 4:
         // Simulate a delay of 3 seconds
         await new Promise((resolve) => setTimeout(resolve, 3000));
         console.log(`Pushing to response page`);
         router.push("/response");
+        proceed = false;
         break;
       default:
     }
 
-    setTrail([...trail, step]);
-    setStep(step + jumpIndex);
+    if (proceed) {
+      setTrail([...trail, step]);
+      setStep(step + jumpIndex);
+    }
   };
 
   const handleNext = (value: string) => {

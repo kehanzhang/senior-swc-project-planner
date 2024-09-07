@@ -12,10 +12,10 @@ export function processUserResponses(responses: UserResponses): Section[] {
   const sections: Section[] = [];
 
   // Project Description
-  if (responses.projectDescription) {
+  if (responses.idea) {
     sections.push({
-      title: "Project Description",
-      content: responses.projectDescription,
+      title: "Idea",
+      content: responses.idea,
     });
   }
 
@@ -97,7 +97,7 @@ export function processUserResponses(responses: UserResponses): Section[] {
   // Helper function to extract video ID from YouTube URL
   const getVideoId = (url: string) => {
     const match = url.match(
-      /(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([\w-]{11})/,
+      /(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([\w-]{11})/
     );
     return match ? match[1] : null;
   };

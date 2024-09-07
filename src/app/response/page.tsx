@@ -10,6 +10,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { parseTimestamp } from "@/lib/utils/timeUtils";
+import { ProjectData } from "@/components/project-data";
+import { useRouter } from "next/navigation";
 interface Section {
   title: string;
   content?: string;
@@ -20,6 +22,7 @@ interface Section {
 
 export default function Response() {
   const { responses } = useUserResponse();
+  const router = useRouter();
   const [guideContent, setGuideContent] = useState<Section[]>([]);
 
   useEffect(() => {
@@ -80,6 +83,8 @@ export default function Response() {
           </div>
         ))}
       </div>
+
+      <ProjectData />
     </main>
   );
 }
