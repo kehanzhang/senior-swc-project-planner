@@ -11,14 +11,6 @@ interface Section {
 export function processUserResponses(responses: UserResponses): Section[] {
   const sections: Section[] = [];
 
-  // Project Description
-  if (responses.projectDescription) {
-    sections.push({
-      title: "Project Description",
-      content: responses.projectDescription,
-    });
-  }
-
   // Replit Basics
   if (responses.setupInstructions) {
     sections.push({
