@@ -158,9 +158,15 @@ export default function QuestionnaireStep({
     };
 
     return (
-        <main className="flex min-h-screen p-24">
-
-            {index > 0 && <Button onClick={handleBack}>Back</Button>}
+        <main className="flex min-h-screen p-24 relative">
+            {index > 0 && (
+                <Button
+                    onClick={handleBack}
+                    className="fixed top-12 left-12 z-10"
+                >
+                    Back
+                </Button>
+            )}
             <div className="flex flex-col items-center justify-center w-full">
                 <p className="text-2xl mb-4 text-center text-semibold">{question}</p>
                 {contentType === 'textInput' && (
@@ -187,7 +193,7 @@ export default function QuestionnaireStep({
 
                 {contentType === 'selectAll' && (
                     <div className="w-full max-w-4xl">
-                        <div className="flex flex-wrap justify-center gap-8 w-full">
+                        <div className="flex justify-center gap-8 w-full pt-12">
                             {buttonLabels.map((label, index) => (
                                 <Button
                                     key={index}
@@ -204,9 +210,8 @@ export default function QuestionnaireStep({
                                     {label}
                                 </Button>
                             ))}
-
                         </div>
-                        <div className="flex justify-center mt-8">
+                        <div className="flex justify-center mt-20">
                             <Button
                                 variant="default"
                                 className="w-72 h-12 text-base"

@@ -52,6 +52,7 @@ const OutputConsole: React.FC = () => {
 
     useEffect(() => {
         if (responses.gitInstructions !== prevGitInstructionsRef.current) {
+            setIsMinimized(false);
             setIsLoading(true);
             setCommandHistory([]);
 
@@ -99,7 +100,7 @@ const OutputConsole: React.FC = () => {
                 </div>
                 <div
                     ref={scrollRef}
-                    className={`overflow-y-auto ${isMinimized ? 'h-0' : 'h-52'} transition-all duration-300`}
+                    className={`overflow-y-auto ${isMinimized ? 'h-0' : 'h-40'} transition-all duration-300`}
                 >
                     {isLoading ? (
                         <div className="text-yellow-500">Your results are loading...</div>
