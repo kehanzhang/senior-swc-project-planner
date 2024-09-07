@@ -2,7 +2,13 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -85,7 +91,10 @@ export function ProjectStep({
       <Card className="mb-4 rounded-sm shadow-none">
         <motion.div variants={contentVariants}>
           <CardHeader>
-            <motion.div variants={itemVariants} className="flex items-center space-x-2">
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center space-x-2"
+            >
               <Checkbox
                 id={`step-${step.step}`}
                 checked={completed}
@@ -101,7 +110,9 @@ export function ProjectStep({
               </CardTitle>
             </motion.div>
             <motion.div variants={itemVariants}>
-              <CardDescription className="text-lg">{step.description}</CardDescription>
+              <CardDescription className="text-lg">
+                {step.description}
+              </CardDescription>
             </motion.div>
           </CardHeader>
           <AnimatePresence initial={false}>
@@ -178,7 +189,10 @@ export function ProjectStep({
                       <h3 className="font-semibold mb-2">Actionable Steps:</h3>
                       <div className="space-y-2">
                         {step.actionableSteps.map((actionableStep, idx) => (
-                          <div key={idx} className="flex items-center space-x-2">
+                          <div
+                            key={idx}
+                            className="flex items-center space-x-2"
+                          >
                             <Checkbox id={`step-${step.step}-action-${idx}`} />
                             <label
                               htmlFor={`step-${step.step}-action-${idx}`}

@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         title: z.string(),
         description: z.string(),
         considerations: z.string(),
-      })
+      }),
     ),
   });
 

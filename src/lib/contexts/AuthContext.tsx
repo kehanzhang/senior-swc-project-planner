@@ -1,7 +1,11 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import { signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut } from "firebase/auth";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut as firebaseSignOut,
+} from "firebase/auth";
 import { User } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
@@ -50,7 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut: signOutUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, signInWithGoogle, signOut: signOutUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

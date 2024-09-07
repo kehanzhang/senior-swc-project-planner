@@ -35,7 +35,9 @@ export function ProjectPlanner() {
 
   const toggleStep = (stepNumber: number) => {
     setCompletedSteps((prev) =>
-      prev.includes(stepNumber) ? prev.filter((step) => step !== stepNumber) : [...prev, stepNumber]
+      prev.includes(stepNumber)
+        ? prev.filter((step) => step !== stepNumber)
+        : [...prev, stepNumber],
     );
     // Automatically collapse the step when it's checked
     setExpandedSteps((prev) => prev.filter((step) => step !== stepNumber));
@@ -43,7 +45,9 @@ export function ProjectPlanner() {
 
   const toggleExpand = (stepNumber: number) => {
     setExpandedSteps((prev) =>
-      prev.includes(stepNumber) ? prev.filter((step) => step !== stepNumber) : [...prev, stepNumber]
+      prev.includes(stepNumber)
+        ? prev.filter((step) => step !== stepNumber)
+        : [...prev, stepNumber],
     );
   };
 
@@ -71,11 +75,18 @@ export function ProjectPlanner() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <GenerateIdeaInput onGenerateSteps={handleGenerateSteps} isGenerating={isGenerating} />
+      <GenerateIdeaInput
+        onGenerateSteps={handleGenerateSteps}
+        isGenerating={isGenerating}
+      />
       {projectData.length > 0 && (
         <>
           <h2 className="text-2xl font-bold my-6">Project Steps</h2>
-          <motion.div variants={containerVariants} initial="hidden" animate="visible">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             <AnimatePresence>
               {projectData.map((step) => (
                 <motion.div key={step.step} variants={itemVariants}>

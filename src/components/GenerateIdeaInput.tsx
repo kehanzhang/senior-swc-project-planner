@@ -10,7 +10,10 @@ interface GenerateIdeaInputProps {
   isGenerating: boolean;
 }
 
-export function GenerateIdeaInput({ onGenerateSteps, isGenerating }: GenerateIdeaInputProps) {
+export function GenerateIdeaInput({
+  onGenerateSteps,
+  isGenerating,
+}: GenerateIdeaInputProps) {
   const [idea, setIdea] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,7 +31,10 @@ export function GenerateIdeaInput({ onGenerateSteps, isGenerating }: GenerateIde
           placeholder="Enter your project idea..."
           className="border-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 shadow-none"
         />
-        <Button type="submit" disabled={isGenerating || !idea || idea.length === 0}>
+        <Button
+          type="submit"
+          disabled={isGenerating || !idea || idea.length === 0}
+        >
           {isGenerating ? (
             <>
               <LoadingSpinner />

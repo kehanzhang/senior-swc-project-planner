@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import OutputConsole from '@/components/outputConsole';
-import QuestionnaireStep from '@/components/QuestionnaireStep';
-import { useState } from 'react';
+import OutputConsole from "@/components/outputConsole";
+import QuestionnaireStep from "@/components/QuestionnaireStep";
+import { useState } from "react";
 
 export default function ProjectDescription() {
   const [step, setStep] = useState(0);

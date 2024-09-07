@@ -57,9 +57,12 @@ export default function ImageUpload({ onImageChange }: ImageUploadProps) {
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <ImageIcon className="w-10 h-10 mb-3 text-gray-400" />
             <p className="mb-2 text-sm text-gray-500">
-              <span className="font-semibold">Click to upload</span> or drag and drop
+              <span className="font-semibold">Click to upload</span> or drag and
+              drop
             </p>
-            <p className="text-xs text-gray-500">PNG, JPG or GIF (MAX. 800x400px)</p>
+            <p className="text-xs text-gray-500">
+              PNG, JPG or GIF (MAX. 800x400px)
+            </p>
           </div>
         </label>
       )}

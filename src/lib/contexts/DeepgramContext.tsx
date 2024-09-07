@@ -9,7 +9,14 @@ import {
   type LiveTranscriptionEvent,
 } from "@deepgram/sdk";
 
-import { createContext, useContext, useState, ReactNode, FunctionComponent, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  FunctionComponent,
+  useRef,
+} from "react";
 
 interface DeepgramContextType {
   connectToDeepgram: () => Promise<void>;
@@ -19,7 +26,9 @@ interface DeepgramContextType {
   error: string | null;
 }
 
-const DeepgramContext = createContext<DeepgramContextType | undefined>(undefined);
+const DeepgramContext = createContext<DeepgramContextType | undefined>(
+  undefined,
+);
 
 interface DeepgramContextProviderProps {
   children: ReactNode;
@@ -31,9 +40,13 @@ const getApiKey = async (): Promise<string> => {
   return result.key;
 };
 
-const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> = ({ children }) => {
+const DeepgramContextProvider: FunctionComponent<
+  DeepgramContextProviderProps
+> = ({ children }) => {
   const [connection, setConnection] = useState<WebSocket | null>(null);
-  const [connectionState, setConnectionState] = useState<SOCKET_STATES>(SOCKET_STATES.closed);
+  const [connectionState, setConnectionState] = useState<SOCKET_STATES>(
+    SOCKET_STATES.closed,
+  );
   const [realtimeTranscript, setRealtimeTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<MediaRecorder | null>(null);
@@ -48,7 +61,10 @@ const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> =
       const apiKey = await getApiKey();
 
       console.log("Opening WebSocket connection...");
-      const socket = new WebSocket("wss://api.deepgram.com/v1/listen", ["token", apiKey]);
+      const socket = new WebSocket("wss://api.deepgram.com/v1/listen", [
+        "token",
+        apiKey,
+      ]);
 
       socket.onopen = () => {
         setConnectionState(SOCKET_STATES.open);
@@ -64,7 +80,11 @@ const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> =
 
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if (data.channel && data.channel.alternatives && data.channel.alternatives[0]) {
+        if (
+          data.channel &&
+          data.channel.alternatives &&
+          data.channel.alternatives[0]
+        ) {
           const newTranscript = data.channel.alternatives[0].transcript;
           setRealtimeTranscript((prev) => prev + " " + newTranscript);
         }
@@ -84,7 +104,9 @@ const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> =
       setConnection(socket);
     } catch (error) {
       console.error("Error starting voice recognition:", error);
-      setError(error instanceof Error ? error.message : "An unknown error occurred");
+      setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      );
       setConnectionState(SOCKET_STATES.closed);
     }
   };
@@ -122,7 +144,9 @@ const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> =
 function useDeepgram(): DeepgramContextType {
   const context = useContext(DeepgramContext);
   if (context === undefined) {
-    throw new Error("useDeepgram must be used within a DeepgramContextProvider");
+    throw new Error(
+      "useDeepgram must be used within a DeepgramContextProvider",
+    );
   }
   return context;
 }

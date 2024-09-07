@@ -1,8 +1,8 @@
-import { Inter } from 'next/font/google'
-import "./globals.css"
-import { UserResponseProvider } from '@/lib/contexts/UserResponseContext';
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { UserResponseProvider } from "@/lib/contexts/UserResponseContext";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -12,9 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserResponseProvider>
-          {children}
-        </UserResponseProvider>
+        <UserResponseProvider>{children}</UserResponseProvider>
       </body>
     </html>
   );

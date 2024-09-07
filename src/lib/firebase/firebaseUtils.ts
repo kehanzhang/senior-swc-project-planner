@@ -1,9 +1,5 @@
 import { auth, db, storage } from "./firebase";
-import {
-  signOut,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -34,9 +30,9 @@ export const addDocument = (collectionName: string, data: any) =>
 
 export const getDocuments = async (collectionName: string) => {
   const querySnapshot = await getDocs(collection(db, collectionName));
-  return querySnapshot.docs.map(doc => ({
+  return querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data()
+    ...doc.data(),
   }));
 };
 
